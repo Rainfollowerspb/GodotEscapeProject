@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://bffc560s2qdi5"]
+
+[ext_resource type="Script" path="res://scripts/character.gd" id="1_a0h8i"]
+[ext_resource type="Texture2D" uid="uid://djsf8bcvt6imx" path="res://art/witness_character_front_3_4.png" id="2_ge43k"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2e34m"]
+size = Vector2(48, 48)
+
+[node name="CharacterBody2D" type="CharacterBody2D"]
+script = ExtResource("1_a0h8i")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-2, 3)
+shape = SubResource("RectangleShape2D_2e34m")
+
+[node name="CharacterSprite" type="Sprite2D" parent="."]
+position = Vector2(-1, -131)
+texture = ExtResource("2_ge43k")
+
+[node name="MsgTimer" type="Timer" parent="."]
+wait_time = 0.1
+
+[connection signal="timeout" from="MsgTimer" to="." method="_on_msg_timer_timeout"]
