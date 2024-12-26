@@ -10,16 +10,14 @@ var characterCollider: KinematicCollision2D
 enum characterStates {IDLE, MOVE}
 var state: characterStates = characterStates.IDLE
 
-var collisionMessageScene = preload("res://scenes/collisionMessage.tscn")
-var collisionMsg
 
 signal character_starts_moving
-
-var width
+signal collision_happened(Vector2)
 
 
 func _ready() -> void:
-	width = $CharacterSprite.get_rect().size.x
+	pass
+	#width = $CharacterSprite.get_rect().size.x
 
 
 func _physics_process(delta: float) -> void:
@@ -31,11 +29,12 @@ func _physics_process(delta: float) -> void:
 func setMoveState(movementVector: Vector2, fromInput = false):
 	var localstate = state
 	localstate = characterStates.IDLE
+	if fromInput:
+		emit_signal("character_starts_moving")
+		#movementVector = check_collision(movementVector)
 	if movementVector:
 		currentMovementVector = movementVector
 		localstate = characterStates.MOVE
-	if fromInput:
-		emit_signal("character_starts_moving")
 	state = localstate
 
 
@@ -45,8 +44,8 @@ func move(movementVector: Vector2):
 	if increment.abs() > movementVector.abs():
 		increment = movementVector
 	movementVector -= increment
-	increment = check_collision(increment)
 	setMoveState(movementVector) # switches state when remaiing destance is 0
+	increment = check_collision(increment)
 	return increment
 
 
@@ -56,15 +55,7 @@ func move(movementVector: Vector2):
 func check_collision(increment):
 	characterCollider = move_and_collide(increment, true)
 	if characterCollider:
-		var collisionIncrement = characterCollider.get_travel()
-		if increment.abs() > collisionIncrement.abs():
-			increment = collisionIncrement
-			call_message()
+		increment = characterCollider.get_travel()
+		currentMovementVector = increment
+		emit_signal("collision_happened", position)
 	return increment
-
-
-func call_message():
-	collisionMsg = collisionMessageScene.instantiate()
-	add_child(collisionMsg)
-	#connect("character_starts_moving", collisionMsg)
-	collisionMsg.position = Vector2(width/2, 0.0)

@@ -18,13 +18,13 @@ func _ready() -> void:
 	$Timer.wait_time = entryTime
 	$Timer.start()
 	remaining_distance = movementDistance
-	# debug
+	#get_parent().character_starts_moving.connect(_on_character_starts_movement)
+	# DEBUG
 	#$MsgFrame.set_clip_children_mode(0)
 
 
 func _process(delta: float) -> void:
 	$MsgFrame/MsgPlaque.position.y -= get_movement_speed() * delta
-	get_parent().character_starts_moving.connect(_on_character_starts_movement)
 	pass
 
 
