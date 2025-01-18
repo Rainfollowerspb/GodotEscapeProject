@@ -13,15 +13,15 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if Input.is_action_just_released("mouseClick"):
-		$MainCharacter.setMoveState(get_local_mouse_position() - $MainCharacter.position, true)
+		$MainCharacter.setDestination(get_local_mouse_position() - $MainCharacter.position)
 
 
 func _on_main_character_collision_happened(msgPos: Vector2) -> void:
 	collisionMsg = collisionMessageScene.instantiate()
 	$MainCharacter.character_starts_moving.connect(collisionMsg._on_character_starts_movement)
 	add_child(collisionMsg)
-	print(get_child_count())
 	# DEBUG
+	print(get_child_count())
 	collisionMsg.position = msgPos
 	for i in get_child_count():
 		print(get_child(i).name)
