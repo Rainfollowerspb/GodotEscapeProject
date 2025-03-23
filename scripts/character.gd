@@ -14,8 +14,12 @@ var state: characterStates = characterStates.IDLE
 signal character_starts_moving
 signal collision_happened(Vector2)
 
+var tile_map_layer: TileMapLayer
+
+var step_height = 1
 
 func _ready() -> void:
+	tile_map_layer = get_parent().get_node("TileMapLayer")
 	pass
 
 
@@ -55,7 +59,10 @@ func move(movementVector: Vector2):
 func check_collision(increment):
 	characterCollider = move_and_collide(increment, true)
 	if characterCollider:
-		increment = characterCollider.get_travel()
-		setDestination(Vector2.ZERO)
-		emit_signal("collision_happened", position)
+		var returnedCollider = characterCollider.get_collider()
+		var cellData = tile_map_layer.get_step_height(characterCollider.get_position() - characterCollider.get_normal())
+		if cellData > step_height:
+			increment = characterCollider.get_travel()
+			setDestination(Vector2.ZERO)
+			emit_signal("collision_happened", position)
 	return increment
