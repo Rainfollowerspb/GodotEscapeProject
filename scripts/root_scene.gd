@@ -20,8 +20,4 @@ func _on_main_character_collision_happened(msgPos: Vector2) -> void:
 	collisionMsg = collisionMessageScene.instantiate()
 	$MainCharacter.character_starts_moving.connect(collisionMsg._on_character_starts_movement)
 	add_child(collisionMsg)
-	# DEBUG
-	print(get_child_count())
 	collisionMsg.position = msgPos
-	for i in get_child_count():
-		print(get_child(i).name)
